@@ -1,0 +1,105 @@
+body {
+    padding: 50px;
+    font-family: "HelveticaNeueLT Std","Helvetica LT Std Light", "Helvetica", "Arial", "sans-serif";
+}
+
+.h2, h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    margin-top: 40px;
+}
+
+p {
+    font-size: 18px;
+    color: black;
+    margin-bottom: 20px;
+}
+
+.botones {
+    margin-bottom: 24px;
+}
+.btn {
+    border: 1px solid;
+    margin-right: 8px;
+    font-family: "HelveticaNeueLT Std","Helvetica LT Std Regular", "Helvetica", "Arial", "sans-serif";
+    font-weight: normal;
+}
+
+.encuestas {
+    margin-right: 0;
+    padding-right: 0;
+}
+
+.resultados {
+    margin-left: 0;
+    padding-left: 0;
+
+}
+/* svg */
+
+svg text {
+    font-family: "HelveticaNeueLT Std","Helvetica LT Std Light", "Helvetica", "Arial", "sans-serif"
+}
+.axis-y .tick line  {
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+    stroke: #e8eced;
+}
+
+.axis-x .tick line, .axis-x .tick path {
+    stroke-width: 1px;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis-y .domain, .axis-x .domain {
+    display: none;
+}
+
+.axis-x text, .axis-y text {
+    font-size: 15px;
+}
+
+.axis-x text {
+    fill: black;
+}
+
+.axis-y text {
+    fill: #656565;
+}
+
+.error {
+    stroke: white;
+    stroke-width: 1px;
+}
+.line {
+    stroke-width: 2px;
+    fill: none
+}
+
+.campaign line, .resultados .anotacion line {
+    stroke: #c5c5c5;
+    fill: none;
+    stroke-dasharray: 2px 2px;
+}
+
+.campaign text {
+    font-size: 16px;
+    fill: #999999;
+    text-anchor: middle;
+}
+
+.resultados .axis-y text {
+    display: none;
+}
+
+.resultados .lines {
+    stroke-dasharray: 2px 2px;
+    fill: none;
+}
+
+.resultados .anotacion text {
+    font-size: 16px;
+    fill: black;
+    text-anchor: middle;
+}
