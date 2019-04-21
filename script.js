@@ -650,7 +650,15 @@ Promise.all(
                     .attr('x', d => scaleX(d.fecha))
                     .attr('y', - marginEncuestas.t_campaign);
             }
-            
+
+            thisPlotCampaign
+                .append('text')
+                .text('Encuestas')
+                .attr('class', 'anotacion_titulo')
+                .style('text-anchor', 'start')
+                .attr('x', 0)
+                .attr('y', - marginEncuestas.t_campaign);
+        
         })
         
         resultados.forEach(resultadosData => {
