@@ -10,10 +10,10 @@ const heightChart = 400;
 
 Promise.all(
     [
-        d3.csv('/data/elecciones_andaluzas_2.csv', parseAndalucia),
-        d3.csv('/data/elecciones_americanas.csv', parseUS),
-        d3.csv('/data/brexit.csv', parseBrexit), 
-        d3.csv('/data/elecciones_colombianas.csv', parseColombia)
+        d3.csv('data\elecciones_andaluzas_2.csv', parseAndalucia),
+        d3.csv('data\elecciones_americanas.csv', parseUS),
+        d3.csv('data\brexit.csv', parseBrexit), 
+        d3.csv('data\elecciones_colombianas.csv', parseColombia)
     ])
     .then(draw)
     .catch(function(error) {
