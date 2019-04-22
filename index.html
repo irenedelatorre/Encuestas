@@ -4,6 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
     <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,400,500,700" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <title>No te fies de las encuestas</title>
 
@@ -35,47 +36,56 @@
 </header>
 <div class='container'>
     <div class='row'>
+        <h1 class='col-md-8'>No te fies de las encuestas</h1>
+    </div>
+    <div class='row'>
+        <p class='col-md-8'>En periodo electoral, medios y partidos se vuelcan hacia horásculos en forma de números: las encuestas. Acaparan titulares, gráficos, mostrándonos cómo votaremos, cómo nos comportaremos. Con suerte, las palabras 'incertidumbre' o 'márgenes de error' aparecerán en algún momento de la pieza y no en letra pequeña al final de la misma.</p>
+        <p class='col-md-8'>Este artículo surge de la curiosidad en torno a ellas. De las preguntas que surgen tras ver como, aún con ejemplos de cómo las encuestas fracasaron en el pasado, se las sigue dando una gran importancia. Y sobre todo surge de un temor: ¿cambian las encuestas los comportamientos de los votantes, indecisos o no? El siguiente artículo no responde a la pregunta, pero sí abre un espacio a debatir y a cuestionarse la importancia que se les da.</p>
+        <p class='col-md-8'>Las siguientes gráficas comparan las encuestas de cuatro elecciones en cuatro países diferentes: las elecciones regionales en Andalucía en 2018, las elecciones presidenciales en Estados Unidos (2016), el Brexit en Reino Unido (2016) y el plesbicito sobre los acuerdos de paz en Colombia (2016). Cuatro ejemplos de cómo las encuestas hacían prever un futuro muy diferente al que fue.</p>
+        <p class='col-md-8'>Los gráficos se componen de dos partes. A la izquierda, los resultados de las encuestas: cada &#9632; representa la valoración que los estudios dieron a cada opción a votar. Si se tienen, también se muestran <span class="cuadrado_leyenda_transparente">&#9632;</span> los márgenes de error en color más pálido. Las líneas de color muestran la evolución de estos resultados a lo largo del tiempo y ha sido calculada sólo con la media de los puntos comunicados en las encuestas. </p>
+    </div>
+    <div class='row'>
         <h2 class='col-md-12'>Elecciones Andaluzas, 2018</h2>
         <div id='elecciones_Andalucia'>
-            <p class='col-md-12 cuadrado_leyenda'>&#9632; Resultado de las encuestas</p>
+            <p class='col-md-12 cuadrado_leyenda'>&#9632; Resultado que cada encuesta da a cada partido. % de voto</p>
             <!-- <p class='col-md-12 cuadrado_leyenda'><span class='cuadrado_legenda'>&#9632;</span> Margen de error</p> -->
             <p class='col-md-12 leyenda'>Clica en los botones para destacar las encuestas de un determinado partido</p>
             <div class='col-md-12 botones btn_Andalucia'></div>
-            <div class='col-md-8 encuestas elecciones_Andalucia_encuestas'></div>
-            <div class='col-md-4 resultados elecciones_Andalucia_resultados'></div>
+            <div class='col-md-8 col-xs-8 encuestas elecciones_Andalucia_encuestas'></div>
+            <div class='col-md-4 col-xs-4 resultados elecciones_Andalucia_resultados'></div>
         </div>
     </div>
     <div class='row'>
-        <h2 class='col-md-12'>Elecciones presidenciales en USA 2016</h2>
+        <h2 class='col-md-12'>Elecciones presidenciales en USA, 2016</h2>
         <div id='elecciones_US'>
-            <p class='col-md-12 cuadrado_leyenda'>&#9632; Resultado de las encuestas</p>
+            <p class='col-md-12 cuadrado_leyenda'>&#9632; Resultado que cada encuesta da a cada partido. % de voto</p>
             <p class='col-md-12 cuadrado_leyenda'><span class='cuadrado_legenda'>&#9632;</span> Margen de error</p>
             <p class='col-md-12 leyenda'>Clica en los botones para destacar las encuestas de un candidato u otro</p>
             <div class='col-md-12 botones btn_US'></div>
-            <div class='col-md-8 encuestas elecciones_US_encuestas'></div>
-            <div class='col-md-4 resultados elecciones_US_resultados'></div>
+            <div class='col-md-8 col-xs-8 encuestas elecciones_US_encuestas'></div>
+            <div class='col-md-4 col-xs-4 resultados elecciones_US_resultados'></div>
         </div>
     </div>
     <div class='row'>
         <h2 class='col-md-12'>Brexit, 2016</h2>
         <div id='elecciones_Brexit'>
-            <p class='col-md-12 cuadrado_leyenda'>&#9632; Resultado de las encuestas</p>
+            <p class='col-md-12 cuadrado_leyenda'>&#9632; Resultado que cada encuesta da a cada opción. % de voto</p>
             <!-- <p class='col-md-12 cuadrado_leyenda'><span class='cuadrado_legenda'>&#9632;</span> Margen de error</p> -->
             <p class='col-md-12 leyenda'>Clica en los botones para destacar las encuestas de una respuesta u otra</p>
             <div class='col-md-12 botones btn_Brexit'></div>
-            <div class='col-md-8 encuestas elecciones_Brexit_encuestas'></div>
-            <div class='col-md-4 resultados elecciones_Brexit_resultados'></div>
+            <div class='col-md-8 col-xs-8 encuestas elecciones_Brexit_encuestas'></div>
+            <div class='col-md-4 col-xs-4 resultados elecciones_Brexit_resultados'></div>
         </div>
     </div>
     <div class='row'>
-            <h2 class='col-md-12'>Plesbicito sobre los acuerdos de pax de Colombia, 2016</h2>
+            <h2 class='col-md-12'>Plesbicito sobre los acuerdos de paz de Colombia, 2016</h2>
             <div id='elecciones_Colombia'>
-                <p class='col-md-12 cuadrado_leyenda'>&#9632; Resultado de las encuestas</p>
+                <p class='col-md-12 cuadrado_leyenda'>&#9632; Resultado que cada encuesta da a cada partido. % de voto</p>
                 <p class='col-md-12 cuadrado_leyenda'><span class='cuadrado_legenda'>&#9632;</span> Margen de error</p>
                 <p class='col-md-12 leyenda'>Clica en los botones para destacar las encuestas de una respuesta u otra</p>
                 <div class='col-md-12 botones btn_Colombia'></div>
-                <div class='col-md-8 encuestas elecciones_Colombia_encuestas'></div>
-                <div class='col-md-4 resultados elecciones_Colombia_resultados'></div>
+                <div class='col-md-8 col-xs-8 encuestas elecciones_Colombia_encuestas'></div>
+                <div class='col-md-4 col-xs-4 resultados elecciones_Colombia_resultados'></div>
             </div>
         </div>
 </div>

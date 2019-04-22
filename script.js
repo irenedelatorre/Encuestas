@@ -399,14 +399,14 @@ Promise.all(
         const colourPA = 'darkgreen';
         const colourPACMA = '#8bc34a';
         const colourVox = 'green';
-        const colourAA = 'purple'; 
+        const colourAA = '#73057d'; 
         const colourAxSi = 'grey';
 
         const colourTrump = '#e10000';
         const colourClinton = '#1b67ea';
 
         const colourRemain = '#f6ba07';
-        const colourLeave ='#1b67ea';
+        const colourLeave ='#047fbc';
         const colourIndecisos = '#999999';
 
         const colourSi = '#8bc34a';
@@ -743,7 +743,7 @@ Promise.all(
             // lines
             thisPlot.select('.anotacion')
                 .append('text')
-                .text('Resultados electorales')
+                .text('Resultados electorales (%)')
                 .attr('x', widthElecciones / 2)
                 .attr('y', - marginEncuestas.t_campaign);
 
@@ -780,17 +780,41 @@ Promise.all(
                 .attr('height', rectWidth)
                 .style('opacity', 1)
                 .style('fill', d => scaleColour(d.partido));
+
+            // results
+            thisPlotResultados
+                .selectAll('.numbers')
+                .data(thisData)
+                .enter()
+                .append('text')
+                .attr('class', d => `numbers ${d.min}`)
+                .text(d => d.resultado)
+                .attr('x', d => scaleX(d.fecha) + 2 * rectWidth)
+                .attr('y', d => {
+                    if (d.min === 'AA' || d.min === 'DT' || d.min === 'Si') {
+                        return scaleY(d.resultado) + 2 * rectWidth/2
+                    }
+
+                    if (d.min === 'PACMA' || d.min === 'No') {
+                        return scaleY(d.resultado) - 2 * rectWidth/2
+                    }
+
+                    return scaleY(d.resultado) + rectWidth/2
+                })
+                .style('opacity', 1)
+                .style('fill', d => scaleColour(d.partido));
         })
         // linea de la media
     }
 
 function parseAndalucia(d) {
+    console.log(d);
     return {
         elecciones: d.elecciones, 
         tipo: d.tipo, 
         fuente: d.Fuente,
         fecha: new Date(d.fecha),
-        fecha_elaboracion: new Date (d['fecha de elaboracion']),
+        fecha_elaboracion: (d['fecha de elaboracion']),
         // sample: d.sample,
         participacion: checkParseValue(d.Participacion),
         resultado_PSOE: checkParseValue(d.PSOE),
@@ -849,6 +873,11 @@ function parseColombia(d) {
         abstencion: checkParseValue(d.abstencion),
         margen: +d['Margen de error'] 
     }
+}
+
+function parseDate(date) {
+    const fecha = date.split('-');
+    return new Date (fecha[0])
 }
 
 function checkParseValue(n) {
