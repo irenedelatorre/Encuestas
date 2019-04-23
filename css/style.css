@@ -21,7 +21,6 @@ p {
 .btn {
     border: 1px solid;
     margin-right: 8px;
-    font-family: "HelveticaNeueLT Std","Helvetica LT Std Regular", "Helvetica", "Arial", "sans-serif";
     font-weight: normal;
     border-radius: 0;
     margin-top: 8px;
@@ -48,7 +47,7 @@ p {
 /* svg */
 
 svg text {
-    font-family: "HelveticaNeueLT Std","Helvetica LT Std Light", "Helvetica", "Arial", "sans-serif"
+    font-family: "Fira Sans", sans-serif;
 }
 .axis-y .tick line  {
     stroke-width: 1px;
@@ -112,11 +111,9 @@ svg text {
     font-size: 16px;
     fill: black;
     text-anchor: middle;
-    font-weight: bold;
-    font-family: "HelveticaNeueLT Std","Helvetica LT Std", "Helvetica", "Arial", "sans-serif";
+    font-weight: 700;
 }
 
 .numbers {
-    font-family: "HelveticaNeueLT Std","Helvetica LT Std", "Helvetica", "Arial", "sans-serif";
-    font-weight: bold;
+    font-weight: 700;
 }

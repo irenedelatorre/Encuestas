@@ -10,7 +10,7 @@ const heightChart = 400;
 
 Promise.all(
     [
-        d3.csv('data/elecciones_andaluzas_2.csv', parseAndalucia),
+        d3.csv('data/elecciones_andaluzas.csv', parseAndalucia),
         d3.csv('data/elecciones_americanas.csv', parseUS),
         d3.csv('data/brexit.csv', parseBrexit), 
         d3.csv('data/elecciones_colombianas.csv', parseColombia)
@@ -25,9 +25,10 @@ Promise.all(
         const us = data[1];
         const brexit = data[2];
         const colombia = data[3];
+        console.log(andalucia);
 
         // filtrar solo encuestas
-        const encuestasAndalucia = andalucia.filter(d => d.tipo === 'Encuesta' && d.fecha > new Date('1 Septiembre 2018'));
+        const encuestasAndalucia = andalucia.filter(d => d.tipo === 'Encuesta' && d.fecha > new Date('1 September 2018'));
         const encuestasUs = us.filter(d => d.tipo === 'Encuesta');
         const encuestasBrexit = brexit.filter(d => d.tipo === 'Encuesta');
         const encuestasColombia = colombia.filter(d => d.tipo === 'Encuesta');
@@ -808,12 +809,11 @@ Promise.all(
     }
 
 function parseAndalucia(d) {
-    console.log(d);
     return {
         elecciones: d.elecciones, 
         tipo: d.tipo, 
         fuente: d.Fuente,
-        fecha: new Date(d.fecha),
+        fecha: new Date (d.fecha),
         fecha_elaboracion: (d['fecha de elaboracion']),
         // sample: d.sample,
         participacion: checkParseValue(d.Participacion),
@@ -877,7 +877,7 @@ function parseColombia(d) {
 
 function parseDate(date) {
     const fecha = date.split('-');
-    return new Date (fecha[0])
+    return new Date (`${fecha[0]}-${fecha[1]}-${fecha[2]}`)
 }
 
 function checkParseValue(n) {
