@@ -425,387 +425,410 @@ Promise.all(
         
         const scaleMaxY = d3.scaleOrdinal().domain(['Andalucia', 'US', 'Brexit', 'Colombia']).range([50, 60, 60, 80]);
         const scaleMaxTicks = d3.scaleOrdinal().domain(['Andalucia', 'US', 'Brexit', 'Colombia']).range([6, 5, 6, 5]);
-        const avgEncuestaPartidos = [];
 
-        resultadosEncuestas.forEach(dataEncuestas => {
-            const thisData = dataEncuestas.filter(d => d.resultado >= 0);
-            thisData.sort((a,b) => a.fecha - b.fecha);
+        draw();
+        
+        function draw () {
+            const avgEncuestaPartidos = [];
 
-            const dataPorPartido = d3.nest()
-                .key(d => `${d.partido}_${d.min}`)
-                .key(d => d.fecha)
-                .rollup(d => d3.mean(d, e => e.resultado))
-                .entries(thisData);
-
-            avgEncuestaPartidos.push([ thisData[0].elecciones, dataPorPartido]);
-
-            d3.select(`.btn_${thisData[0].elecciones}`)
-                .selectAll('.btn')
-                .data(dataPorPartido)
-                .enter()
-                .append('p')
-                .html(d => d.key.split('_')[0])
-                .attr('class', d => `btn btn_partido btn_${d.key.split('_')[1]}`)
-                .style('color', d => scaleColour(d.key.split('_')[0]))
-                .on('click', d => {
-                    const key = d.key.split('_')[1];
-                    const party = d.key.split('_')[0];
-
-                    d3.select(`.btn_${thisData[0].elecciones}`)
-                        .selectAll('.btn_partido')
-                        .style('color', e => scaleColour(e.key.split('_')[0]))
-                        .style('background-color', 'white');
-                    
-                    d3.select(`.btn_${thisData[0].elecciones}`)
-                        .select('.reset')
-                        .style('color', 'black')
-                        .style('background-color', 'white');
-
-                    d3.select(`.btn_${thisData[0].elecciones}`)
-                        .select(`.btn_${key}`)
-                        .style('color', 'white')
-                        .style('background-color', d => scaleColour(party));
-                    
-                    thisPlot
-                        .selectAll('.dots')
-                        .selectAll('.dot')
-                        .style('opacity', 0.1);
-
-                    thisPlot
-                        .selectAll('.dots')
-                        .selectAll(`.${key}`)
-                        .style('opacity', 1);
-                    
-                    thisPlot
-                        .selectAll('.errorMargin')
-                        .selectAll('.error')
-                        .style('opacity', 0.02);
-
-                    thisPlot
-                        .selectAll('.errorMargin')
-                        .selectAll(`.${key}`)
-                        .style('opacity', 0.2);
-                    
-                    thisPlot
-                        .selectAll('.lines')
-                        .selectAll('.line')
-                        .style('opacity', 0.5);
-                    
-                    thisPlot
-                        .selectAll('.lines')
-                        .selectAll(`.${key}`)
-                        .style('opacity', 1);
-                });
-
-            d3.select(`.btn_${thisData[0].elecciones}`)
-                .append('p')
-                .html('Todos los partidos')
-                .attr('class', 'reset btn')
-                .style('background-color', 'black')
-                .style('color', 'white')
-                .on('click', d => {
-                    d3.select(`.btn_${thisData[0].elecciones}`)
-                        .select('.reset')
-                        .style('background-color', 'black')
-                        .style('color', 'white');
-
-                    d3.select(`.btn_${thisData[0].elecciones}`)
-                        .selectAll('.btn_partido')
-                        .style('color', e => scaleColour(e.key.split('_')[0]))
-                        .style('background-color', 'white');
-
-                    thisPlot
-                        .selectAll('.dots')
-                        .selectAll('.dot')
-                        .style('opacity', 0.4);
-                    
-                    thisPlot
-                        .selectAll('.errorMargin')
-                        .selectAll('.error')
-                        .style('opacity', 0.05);
-
-                    thisPlot
-                        .selectAll('.lines')
-                        .selectAll('.line')
-                        .style('opacity', 1);
-                })
-
-            const thisId = `.elecciones_${thisData[0].elecciones}_encuestas`;
-            const widthEncuestas = d3.select(thisId).node().clientWidth - marginEncuestas.r - marginEncuestas.l;
-            const maxY = scaleMaxY(thisData[0].elecciones);
-            
-            const thisPlot = d3.select(thisId)    
-                .append('svg')
-                .attr('width', widthEncuestas + marginEncuestas.r + marginEncuestas.l)
-                .attr('height', heightChart + marginEncuestas.t + marginEncuestas.b);
-            
-            // scales
-            // scale X by time
-            const timeExtent = d3.extent(dataEncuestas, d => d.fecha);
-            const scaleX = d3.scaleTime().domain(timeExtent).range([0, widthEncuestas]);
-            
-            // scaleY by 0 - 100
-            const scaleY = d3.scaleLinear().domain([0, maxY]).range([heightChart, 0]);
+            resultadosEncuestas.forEach(dataEncuestas => {
+                const thisData = dataEncuestas.filter(d => d.resultado >= 0);
+                thisData.sort((a,b) => a.fecha - b.fecha);
     
-            // axis
-            const axisX = d3.axisBottom()
-                .scale(scaleX)
-                .ticks(scaleMaxTicks(thisData[0].elecciones))
-                .tickPadding([5]);
+                const dataPorPartido = d3.nest()
+                    .key(d => `${d.partido}_${d.min}`)
+                    .key(d => d.fecha)
+                    .rollup(d => d3.mean(d, e => e.resultado))
+                    .entries(thisData);
+    
+                avgEncuestaPartidos.push([ thisData[0].elecciones, dataPorPartido]);
 
-            const axisY = d3.axisLeft()
-                .scale(scaleY)
-                .tickSizeInner(-widthEncuestas)
-                .tickPadding([8])
-                .ticks(5);
+                const thisId = `.elecciones_${thisData[0].elecciones}_encuestas`;
 
-            // grupos
-            thisPlot.append('g')
-                .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t})`)
-                .attr('class', 'axis axis-y');
-
-            thisPlot.append('g')
-                .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t+heightChart})`)
-                .attr('class', 'axis axis-x');
-
-            const thisPlotCampaign = thisPlot.append('g')
-                .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t})`)
-                .attr('class', 'campaign');
-
-            const thisMarginPlot = thisPlot.append('g')
-                .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t})`)
-                .attr('class', 'errorMargin');
-
-            const thisPlotLines = thisPlot.append('g')
-                .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t})`)
-                .attr('class', 'lines');
-
-            const thisPlotDots = thisPlot.append('g')
-                .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t})`)
-                .attr('class', 'dots');
-
-            thisPlot.select(".axis-x").call(axisX);
-            thisPlot.select(".axis-y").call(axisY);
-
-            // ENCUESTA MARGENES DE ERROR
-            thisMarginPlot
-                .selectAll('.error')
-                .data(thisData.filter(d => d.margen >= 0))
-                .enter()
-                .append('rect')
-                .attr('class', d => `error ${d.min}`)
-                .attr('x', d => scaleX(d.fecha) - rectWidth/2)
-                .attr('y', d => scaleY(d.resultado) - (heightChart - scaleY(d.margen)))
-                .attr('width', rectWidth)
-                .attr('height', d => 2 * (heightChart - scaleY(d.margen)))
-                .style('opacity', 0.05)
-                .style('fill', d => scaleColour(d.partido));
-
-            // ENCUESTA AVG.
-            thisPlotDots
-                .selectAll('.dot')
-                .data(thisData)
-                .enter()
-                .append('rect')
-                .attr('class', d => `dot ${d.min}`)
-                .attr('x', d => scaleX(d.fecha) - rectWidth / 2)
-                .attr('y', d => scaleY(d.resultado) - rectWidth / 2)
-                .attr('width', rectWidth)
-                .attr('height', rectWidth)
-                .style('opacity', 0.4)
-                .style('fill', d => scaleColour(d.partido));
-
-            const linePartidos = d3.line()
-                .x(d => scaleX(new Date(d.key)))
-                .y(d => scaleY(d.value))
-                .curve(d3.curveCatmullRom);
-
-            thisPlotLines
-                .selectAll('.line')
-                .data(dataPorPartido)
-                .enter()
-                .append('path')
-                .attr('class', d => `line ${d.key.split('_')[1]}`)
-                .attr('d', d => linePartidos(d.values))
-                .style('stroke', d => scaleColour(d.key.split('_')[0]));
-
-            if (fechas[thisData[0].elecciones] !== undefined) {
-                const plotAnnotation = thisPlotCampaign
-                .selectAll('.info')
-                .data([fechas[thisData[0].elecciones]]);
-
-                plotAnnotation
+                if (d3.select(`.btn_${thisData[0].elecciones}`).selectAll('.btn').empty() === true) {
+                    d3.select(`.btn_${thisData[0].elecciones}`)
+                    .selectAll('.btn')
+                    .data(dataPorPartido)
                     .enter()
-                    .append('line')
-                    .attr('x1', d => scaleX(d.fecha))
-                    .attr('x2', d => scaleX(d.fecha))
-                    .attr('y1', scaleY(0))
-                    .attr('y2', - marginEncuestas.t_campaign / 2)
-                    .attr('class', 'info');
-
-                plotAnnotation
+                    .append('p')
+                    .html(d => d.key.split('_')[0])
+                    .attr('class', d => `btn btn_partido btn_${d.key.split('_')[1]}`)
+                    .style('color', d => scaleColour(d.key.split('_')[0]))
+                    .on('click', d => {
+                        const key = d.key.split('_')[1];
+                        const party = d.key.split('_')[0];
+    
+                        d3.select(`.btn_${thisData[0].elecciones}`)
+                            .selectAll('.btn_partido')
+                            .style('color', e => scaleColour(e.key.split('_')[0]))
+                            .style('background-color', 'white');
+                        
+                        d3.select(`.btn_${thisData[0].elecciones}`)
+                            .select('.reset')
+                            .style('color', 'black')
+                            .style('background-color', 'white');
+    
+                        d3.select(`.btn_${thisData[0].elecciones}`)
+                            .select(`.btn_${key}`)
+                            .style('color', 'white')
+                            .style('background-color', d => scaleColour(party));
+                        
+                        thisPlot
+                            .selectAll('.dots')
+                            .selectAll('.dot')
+                            .style('opacity', 0.1);
+    
+                        thisPlot
+                            .selectAll('.dots')
+                            .selectAll(`.${key}`)
+                            .style('opacity', 1);
+                        
+                        thisPlot
+                            .selectAll('.errorMargin')
+                            .selectAll('.error')
+                            .style('opacity', 0.02);
+    
+                        thisPlot
+                            .selectAll('.errorMargin')
+                            .selectAll(`.${key}`)
+                            .style('opacity', 0.2);
+                        
+                        thisPlot
+                            .selectAll('.lines')
+                            .selectAll('.line')
+                            .style('opacity', 0.5);
+                        
+                        thisPlot
+                            .selectAll('.lines')
+                            .selectAll(`.${key}`)
+                            .style('opacity', 1);
+                    });
+    
+                d3.select(`.btn_${thisData[0].elecciones}`)
+                    .append('p')
+                    .html('Todos los partidos')
+                    .attr('class', 'reset btn')
+                    .style('background-color', 'black')
+                    .style('color', 'white')
+                    .on('click', d => {
+                        d3.select(`.btn_${thisData[0].elecciones}`)
+                            .select('.reset')
+                            .style('background-color', 'black')
+                            .style('color', 'white');
+    
+                        d3.select(`.btn_${thisData[0].elecciones}`)
+                            .selectAll('.btn_partido')
+                            .style('color', e => scaleColour(e.key.split('_')[0]))
+                            .style('background-color', 'white');
+    
+                        thisPlot
+                            .selectAll('.dots')
+                            .selectAll('.dot')
+                            .style('opacity', 0.4);
+                        
+                        thisPlot
+                            .selectAll('.errorMargin')
+                            .selectAll('.error')
+                            .style('opacity', 0.05);
+    
+                        thisPlot
+                            .selectAll('.lines')
+                            .selectAll('.line')
+                            .style('opacity', 1);
+                    })
+                }
+    
+                
+                const widthEncuestas = d3.select(thisId).node().clientWidth - marginEncuestas.r - marginEncuestas.l;
+                const maxY = scaleMaxY(thisData[0].elecciones);
+                
+                const thisPlot = d3.select(thisId)    
+                    .append('svg')
+                    .attr('width', widthEncuestas + marginEncuestas.r + marginEncuestas.l)
+                    .attr('height', heightChart + marginEncuestas.t + marginEncuestas.b);
+                
+                // scales
+                // scale X by time
+                const timeExtent = d3.extent(dataEncuestas, d => d.fecha);
+                const scaleX = d3.scaleTime().domain(timeExtent).range([0, widthEncuestas]);
+                
+                // scaleY by 0 - 100
+                const scaleY = d3.scaleLinear().domain([0, maxY]).range([heightChart, 0]);
+        
+                // axis
+                const axisX = d3.axisBottom()
+                    .scale(scaleX)
+                    .ticks(scaleMaxTicks(thisData[0].elecciones))
+                    .tickPadding([5]);
+    
+                const axisY = d3.axisLeft()
+                    .scale(scaleY)
+                    .tickSizeInner(-widthEncuestas)
+                    .tickPadding([8])
+                    .ticks(5);
+    
+                // grupos
+                thisPlot.append('g')
+                    .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t})`)
+                    .attr('class', 'axis axis-y');
+    
+                thisPlot.append('g')
+                    .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t+heightChart})`)
+                    .attr('class', 'axis axis-x');
+    
+                const thisPlotCampaign = thisPlot.append('g')
+                    .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t})`)
+                    .attr('class', 'campaign');
+    
+                const thisMarginPlot = thisPlot.append('g')
+                    .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t})`)
+                    .attr('class', 'errorMargin');
+    
+                const thisPlotLines = thisPlot.append('g')
+                    .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t})`)
+                    .attr('class', 'lines');
+    
+                const thisPlotDots = thisPlot.append('g')
+                    .attr('transform', `translate(${marginEncuestas.l}, ${marginEncuestas.t})`)
+                    .attr('class', 'dots');
+    
+                thisPlot.select(".axis-x").call(axisX);
+                thisPlot.select(".axis-y").call(axisY);
+    
+                // ENCUESTA MARGENES DE ERROR
+                thisMarginPlot
+                    .selectAll('.error')
+                    .data(thisData.filter(d => d.margen >= 0))
                     .enter()
+                    .append('rect')
+                    .attr('class', d => `error ${d.min}`)
+                    .attr('x', d => scaleX(d.fecha) - rectWidth/2)
+                    .attr('y', d => scaleY(d.resultado) - (heightChart - scaleY(d.margen)))
+                    .attr('width', rectWidth)
+                    .attr('height', d => 2 * (heightChart - scaleY(d.margen)))
+                    .style('opacity', 0.05)
+                    .style('fill', d => scaleColour(d.partido));
+    
+                // ENCUESTA AVG.
+                thisPlotDots
+                    .selectAll('.dot')
+                    .data(thisData)
+                    .enter()
+                    .append('rect')
+                    .attr('class', d => `dot ${d.min}`)
+                    .attr('x', d => scaleX(d.fecha) - rectWidth / 2)
+                    .attr('y', d => scaleY(d.resultado) - rectWidth / 2)
+                    .attr('width', rectWidth)
+                    .attr('height', rectWidth)
+                    .style('opacity', 0.4)
+                    .style('fill', d => scaleColour(d.partido));
+    
+                const linePartidos = d3.line()
+                    .x(d => scaleX(new Date(d.key)))
+                    .y(d => scaleY(d.value))
+                    .curve(d3.curveCatmullRom);
+    
+                thisPlotLines
+                    .selectAll('.line')
+                    .data(dataPorPartido)
+                    .enter()
+                    .append('path')
+                    .attr('class', d => `line ${d.key.split('_')[1]}`)
+                    .attr('d', d => linePartidos(d.values))
+                    .style('stroke', d => scaleColour(d.key.split('_')[0]));
+    
+                if (fechas[thisData[0].elecciones] !== undefined) {
+                    const plotAnnotation = thisPlotCampaign
+                    .selectAll('.info')
+                    .data([fechas[thisData[0].elecciones]]);
+    
+                    plotAnnotation
+                        .enter()
+                        .append('line')
+                        .attr('x1', d => scaleX(d.fecha))
+                        .attr('x2', d => scaleX(d.fecha))
+                        .attr('y1', scaleY(0))
+                        .attr('y2', - marginEncuestas.t_campaign / 2)
+                        .attr('class', 'info');
+    
+                    plotAnnotation
+                        .enter()
+                        .append('text')
+                        .text('Inicio oficial de campaña')
+                        .attr('class', 'info')
+                        .attr('x', d => scaleX(d.fecha))
+                        .attr('y', - marginEncuestas.t_campaign);
+                }
+    
+                thisPlotCampaign
                     .append('text')
-                    .text('Inicio oficial de campaña')
-                    .attr('class', 'info')
-                    .attr('x', d => scaleX(d.fecha))
+                    .text('Encuestas')
+                    .attr('class', 'anotacion_titulo')
+                    .style('text-anchor', 'start')
+                    .attr('x', 0)
                     .attr('y', - marginEncuestas.t_campaign);
-            }
-
-            thisPlotCampaign
-                .append('text')
-                .text('Encuestas')
-                .attr('class', 'anotacion_titulo')
-                .style('text-anchor', 'start')
-                .attr('x', 0)
-                .attr('y', - marginEncuestas.t_campaign);
-        
-        })
-        
-        resultados.forEach(resultadosData => {
-            thisData = resultadosData.filter(d => d.resultado >= 0);
-            const thisId = `.elecciones_${thisData[0].elecciones}_resultados`;
-            const widthElecciones = d3.select(thisId).node().clientWidth - marginResultados.r - marginResultados.l;
-            const maxY = scaleMaxY(thisData[0].elecciones);
-
-            const ultimasEncuestasAvg = [];
-
-            for (let i = 0; i < avgEncuestaPartidos.length; i++) {
-                if (avgEncuestaPartidos[i][0] === thisData[0].elecciones) {
-                    const thisPartidos = avgEncuestaPartidos[i][1];
-
-                    for (let p = 0; p < thisPartidos.length; p++) {
-                        const resultado = thisData.filter(e => e.partido === thisPartidos[p].key.split('_')[0])[0];
-                        if (resultado !== undefined) {
-                            ultimasEncuestasAvg.push({
-                                partido: thisPartidos[p].key.split('_')[0],
-                                min: thisPartidos[p].key.split('_')[1],
-                                ult_encuesta: thisPartidos[p].values[thisPartidos[p].values.length - 1].value,
-                                elecciones: resultado.resultado,
-                                fecha: resultado.fecha
-                            })
+            
+            })
+            
+            resultados.forEach(resultadosData => {
+                thisData = resultadosData.filter(d => d.resultado >= 0);
+                const thisId = `.elecciones_${thisData[0].elecciones}_resultados`;
+                const widthElecciones = d3.select(thisId).node().clientWidth - marginResultados.r - marginResultados.l;
+                const maxY = scaleMaxY(thisData[0].elecciones);
+    
+                const ultimasEncuestasAvg = [];
+    
+                for (let i = 0; i < avgEncuestaPartidos.length; i++) {
+                    if (avgEncuestaPartidos[i][0] === thisData[0].elecciones) {
+                        const thisPartidos = avgEncuestaPartidos[i][1];
+    
+                        for (let p = 0; p < thisPartidos.length; p++) {
+                            const resultado = thisData.filter(e => e.partido === thisPartidos[p].key.split('_')[0])[0];
+                            if (resultado !== undefined) {
+                                ultimasEncuestasAvg.push({
+                                    partido: thisPartidos[p].key.split('_')[0],
+                                    min: thisPartidos[p].key.split('_')[1],
+                                    ult_encuesta: thisPartidos[p].values[thisPartidos[p].values.length - 1].value,
+                                    elecciones: resultado.resultado,
+                                    fecha: resultado.fecha
+                                })
+                            }
                         }
                     }
                 }
-            }
-
-            const thisPlot = d3.select(thisId)    
-                .append('svg')
-                .attr('width', widthElecciones + marginResultados.r + marginResultados.l)
-                .attr('height', heightChart + marginResultados.t + marginResultados.b);
-
-            // scales
-            // scale X by time
-            const timeExtent = d3.extent(thisData, d => d.fecha);
-            const scaleX = d3.scaleTime().domain(timeExtent).range([0, widthElecciones]);
-
-            // scaleY by 0 - 100
-            const scaleY = d3.scaleLinear().domain([0, maxY]).range([heightChart, 0]);
-
-            // axis
-            const axisX = d3.axisBottom()
-                .scale(scaleX)
-                .ticks(1)
-                .tickPadding([5]);
-
-            const axisY = d3.axisLeft()
-                .scale(scaleY)
-                .tickSizeInner(-widthElecciones)
-                .tickPadding([8])
-                .ticks(5);
-
-            // grupos
-            thisPlot.append('g')
-                .attr('transform', `translate(${marginResultados.l}, ${marginResultados.t})`)
-                .attr('class', 'axis axis-y');
-
-            thisPlot.append('g')
-                .attr('transform', `translate(${marginResultados.l}, ${marginResultados.t+heightChart})`)
-                .attr('class', 'axis axis-x');
-
-            thisPlot.append('g')
-                .attr('transform', `translate(${marginResultados.l}, ${marginResultados.t})`)
-                .attr('class', 'anotacion');
-
-            const thisPlotRelacionEncuestas = thisPlot.append('g')
-                .attr('transform', `translate(${marginResultados.l}, ${marginResultados.t})`)
-                .attr('class', 'relacion');
+    
+                const thisPlot = d3.select(thisId)    
+                    .append('svg')
+                    .attr('width', widthElecciones + marginResultados.r + marginResultados.l)
+                    .attr('height', heightChart + marginResultados.t + marginResultados.b);
+    
+                // scales
+                // scale X by time
+                const timeExtent = d3.extent(thisData, d => d.fecha);
+                const scaleX = d3.scaleTime().domain(timeExtent).range([0, widthElecciones]);
+    
+                // scaleY by 0 - 100
+                const scaleY = d3.scaleLinear().domain([0, maxY]).range([heightChart, 0]);
+    
+                // axis
+                const axisX = d3.axisBottom()
+                    .scale(scaleX)
+                    .ticks(1)
+                    .tickPadding([5]);
+    
+                const axisY = d3.axisLeft()
+                    .scale(scaleY)
+                    .tickSizeInner(-widthElecciones)
+                    .tickPadding([8])
+                    .ticks(5);
+    
+                // grupos
+                thisPlot.append('g')
+                    .attr('transform', `translate(${marginResultados.l}, ${marginResultados.t})`)
+                    .attr('class', 'axis axis-y');
+    
+                thisPlot.append('g')
+                    .attr('transform', `translate(${marginResultados.l}, ${marginResultados.t+heightChart})`)
+                    .attr('class', 'axis axis-x');
+    
+                thisPlot.append('g')
+                    .attr('transform', `translate(${marginResultados.l}, ${marginResultados.t})`)
+                    .attr('class', 'anotacion');
+    
+                const thisPlotRelacionEncuestas = thisPlot.append('g')
+                    .attr('transform', `translate(${marginResultados.l}, ${marginResultados.t})`)
+                    .attr('class', 'relacion');
+                    
+                const thisPlotResultados = thisPlot.append('g')
+                    .attr('transform', `translate(${marginResultados.l}, ${marginResultados.t})`)
+                    .attr('class', 'resultados');
+    
+                thisPlot.select('.axis-x')
+                    .call(axisX);
+    
+                thisPlot.select('.axis-y')
+                    .call(axisY);
                 
-            const thisPlotResultados = thisPlot.append('g')
-                .attr('transform', `translate(${marginResultados.l}, ${marginResultados.t})`)
-                .attr('class', 'resultados');
+                // lines
+                thisPlot.select('.anotacion')
+                    .append('text')
+                    .text('Resultados electorales (%)')
+                    .attr('x', widthElecciones / 2)
+                    .attr('y', - marginEncuestas.t_campaign);
+    
+                thisPlot.select('.anotacion')   
+                    .append('line')
+                    .attr('class', 'anotacion')
+                    .attr('x1', widthElecciones / 2)
+                    .attr('x2', widthElecciones / 2)
+                    .attr('y1', scaleY(0))
+                    .attr('y2', - marginEncuestas.t_campaign / 2);
+    
+                thisPlotRelacionEncuestas.selectAll('.lines')
+                    .data(ultimasEncuestasAvg)
+                    .enter()
+                    .append('line')
+                    .attr('class', d => `lines ${d.min}`)
+                    .attr('x1', 0)
+                    .attr('x2', d => scaleX(d.fecha))
+                    .attr('y1', d => scaleY(d.ult_encuesta))
+                    .attr('y2', d => scaleY(d.elecciones))
+                    .style('opacity', 1)
+                    .style('stroke', d => scaleColour(d.partido));
+    
+                // dots
+                thisPlotResultados
+                    .selectAll('.dot')
+                    .data(thisData)
+                    .enter()
+                    .append('rect')
+                    .attr('class', d => `dot ${d.min}`)
+                    .attr('x', d => scaleX(d.fecha) - rectWidth / 2)
+                    .attr('y', d => scaleY(d.resultado) - rectWidth / 2)
+                    .attr('width', rectWidth)
+                    .attr('height', rectWidth)
+                    .style('opacity', 1)
+                    .style('fill', d => scaleColour(d.partido));
+    
+                // results
+                thisPlotResultados
+                    .selectAll('.numbers')
+                    .data(thisData)
+                    .enter()
+                    .append('text')
+                    .attr('class', d => `numbers ${d.min}`)
+                    .text(d => d.resultado)
+                    .attr('x', d => scaleX(d.fecha) + 2 * rectWidth)
+                    .attr('y', d => {
+                        if (d.min === 'AA' || d.min === 'DT' || d.min === 'Si') {
+                            return scaleY(d.resultado) + 2 * rectWidth/2
+                        }
+    
+                        if (d.min === 'PACMA' || d.min === 'No') {
+                            return scaleY(d.resultado) - 2 * rectWidth/2
+                        }
+    
+                        return scaleY(d.resultado) + rectWidth/2
+                    })
+                    .style('opacity', 1)
+                    .style('fill', d => scaleColour(d.partido));
+            })
 
-            thisPlot.select('.axis-x')
-                .call(axisX);
+        }
+       
+        
+        // update chart when rezising window
+        window.addEventListener('resize', updateChart);
 
-            thisPlot.select('.axis-y')
-                .call(axisY);
+        function updateChart () {
+
+            // no deberia ser asi pero...
+            d3.selectAll('svg').remove();
+
+            draw();
             
-            // lines
-            thisPlot.select('.anotacion')
-                .append('text')
-                .text('Resultados electorales (%)')
-                .attr('x', widthElecciones / 2)
-                .attr('y', - marginEncuestas.t_campaign);
+        }
 
-            thisPlot.select('.anotacion')   
-                .append('line')
-                .attr('class', 'anotacion')
-                .attr('x1', widthElecciones / 2)
-                .attr('x2', widthElecciones / 2)
-                .attr('y1', scaleY(0))
-                .attr('y2', - marginEncuestas.t_campaign / 2);
-
-            thisPlotRelacionEncuestas.selectAll('.lines')
-                .data(ultimasEncuestasAvg)
-                .enter()
-                .append('line')
-                .attr('class', d => `lines ${d.min}`)
-                .attr('x1', 0)
-                .attr('x2', d => scaleX(d.fecha))
-                .attr('y1', d => scaleY(d.ult_encuesta))
-                .attr('y2', d => scaleY(d.elecciones))
-                .style('opacity', 1)
-                .style('stroke', d => scaleColour(d.partido));
-
-            // dots
-            thisPlotResultados
-                .selectAll('.dot')
-                .data(thisData)
-                .enter()
-                .append('rect')
-                .attr('class', d => `dot ${d.min}`)
-                .attr('x', d => scaleX(d.fecha) - rectWidth / 2)
-                .attr('y', d => scaleY(d.resultado) - rectWidth / 2)
-                .attr('width', rectWidth)
-                .attr('height', rectWidth)
-                .style('opacity', 1)
-                .style('fill', d => scaleColour(d.partido));
-
-            // results
-            thisPlotResultados
-                .selectAll('.numbers')
-                .data(thisData)
-                .enter()
-                .append('text')
-                .attr('class', d => `numbers ${d.min}`)
-                .text(d => d.resultado)
-                .attr('x', d => scaleX(d.fecha) + 2 * rectWidth)
-                .attr('y', d => {
-                    if (d.min === 'AA' || d.min === 'DT' || d.min === 'Si') {
-                        return scaleY(d.resultado) + 2 * rectWidth/2
-                    }
-
-                    if (d.min === 'PACMA' || d.min === 'No') {
-                        return scaleY(d.resultado) - 2 * rectWidth/2
-                    }
-
-                    return scaleY(d.resultado) + rectWidth/2
-                })
-                .style('opacity', 1)
-                .style('fill', d => scaleColour(d.partido));
-        })
-        // linea de la media
     }
 
 function parseAndalucia(d) {
