@@ -3,17 +3,28 @@ body {
     font-family: 'Fira Sans', sans-serif;
 }
 
+.h1, h1 {
+    font-size: 32pt;
+    font-weight: 700;
+}
+
 .h2, h2 {
-    font-size: 24px;
+    font-size: 24pt;
     margin-bottom: 10px;
     margin-top: 40px;
+    font-weight: 700;
 }
 
 p {
-    font-size: 18px;
+    font-size: 14pt;
     color: black;
     margin-bottom: 20px;
 }
+
+a {
+    color:#047fbc;
+}
+
 
 .botones {
     margin-bottom: 24px;
@@ -44,6 +55,8 @@ p {
 .cuadrado_leyenda {
     margin-bottom: 5px;
 }
+
+
 /* svg */
 
 svg text {
@@ -66,7 +79,7 @@ svg text {
 }
 
 .axis-x text, .axis-y text {
-    font-size: 15px;
+    font-size: 12pt;
 }
 
 .axis-x text {
@@ -93,7 +106,7 @@ svg text {
 }
 
 .campaign text {
-    font-size: 16px;
+    font-size: 12pt;
     fill: #999999;
     text-anchor: middle;
 }
@@ -108,12 +121,23 @@ svg text {
 }
 
 .resultados .anotacion text, .encuestas .anotacion_titulo {
-    font-size: 16px;
+    font-size: 12pt;
     fill: black;
     text-anchor: middle;
     font-weight: 700;
 }
 
 .numbers {
+    font-size: 14pt;
     font-weight: 700;
+}
+
+@media (max-width: 401px) {
+    .info{
+        display: none !important;
+    }
+
+    .anotacion text {
+        font-size: 8pt !important;
+    }
 }

@@ -424,7 +424,7 @@ Promise.all(
                     colourSi, colourNo, colourIndecisos]);
         
         const scaleMaxY = d3.scaleOrdinal().domain(['Andalucia', 'US', 'Brexit', 'Colombia']).range([50, 60, 60, 80]);
-        const scaleMaxTicks = d3.scaleOrdinal().domain(['Andalucia', 'US', 'Brexit', 'Colombia']).range([6, 5, 6, 5]);
+        const scaleMaxTicks = d3.scaleOrdinal().domain(['Andalucia', 'US', 'Brexit', 'Colombia']).range([3, 3, 3, 2]);
 
         draw();
         
@@ -554,11 +554,45 @@ Promise.all(
                 
                 // scaleY by 0 - 100
                 const scaleY = d3.scaleLinear().domain([0, maxY]).range([heightChart, 0]);
-        
+                const formatMonth = d3.timeFormat("%b");
+                const formatDay = d3.timeFormat('%d');
+
+                function formatMonthSpanish(date) {
+                    if (thisData[0].elecciones !== 'Colombia') {
+                        if (formatMonth(date) === 'Jan') {
+                            return 'Ene'
+                        } else if (formatMonth(date) === 'Feb') {
+                            return 'Feb'
+                        } else if (formatMonth(date) === 'Mar') {
+                            return 'Mar'
+                        } else if (formatMonth(date) === 'Apr') {
+                            return 'Abril'
+                        } else if (formatMonth(date) === 'May') {
+                            return 'Mayo'
+                        } else if (formatMonth(date) === 'Jun') {
+                            return 'Jun'
+                        } else if (formatMonth(date) === 'Jul') {
+                            return 'Jul'
+                        } else if (formatMonth(date) === 'Aug') {
+                            return 'Ago'
+                        } else if (formatMonth(date) === 'Sep') {
+                            return 'Sept'
+                        } else if (formatMonth(date) === 'Oct') {
+                            return 'Oct'
+                        } else if (formatMonth(date) === 'Nov') {
+                            return 'Nov'
+                        } else if (formatMonth(date) === 'Dec') {
+                            return 'Dic'
+                        }  
+                    }
+                   
+                    return `${formatDay(date)} ${formatMonth(date)}`;
+                }
                 // axis
                 const axisX = d3.axisBottom()
                     .scale(scaleX)
                     .ticks(scaleMaxTicks(thisData[0].elecciones))
+                    .tickFormat(formatMonthSpanish)
                     .tickPadding([5]);
     
                 const axisY = d3.axisLeft()
@@ -752,8 +786,13 @@ Promise.all(
                 // lines
                 thisPlot.select('.anotacion')
                     .append('text')
-                    .text('Resultados electorales (%)')
-                    .attr('x', widthElecciones / 2)
+                    .text('Resultados electorales')
+                    .attr('x', d => {
+                        if (widthElecciones < 250) {
+                            return widthElecciones / 2 + 10;
+                        }
+                        return widthElecciones / 2
+                    })
                     .attr('y', - marginEncuestas.t_campaign);
     
                 thisPlot.select('.anotacion')   
@@ -804,8 +843,12 @@ Promise.all(
                             return scaleY(d.resultado) + 2 * rectWidth/2
                         }
     
-                        if (d.min === 'PACMA' || d.min === 'No') {
+                        if (d.min === 'PACMA') {
                             return scaleY(d.resultado) - 2 * rectWidth/2
+                        } 
+
+                        if (d.min === 'No') {
+                            return scaleY(d.resultado) - 4 * rectWidth/2
                         }
     
                         return scaleY(d.resultado) + rectWidth/2
