@@ -399,7 +399,7 @@ Promise.all(
         const colourCiudadanos = '#ff8b00';
         const colourPA = 'darkgreen';
         const colourPACMA = '#8bc34a';
-        const colourVox = 'green';
+        const colourVox = '#3e6917';
         const colourAA = '#73057d'; 
         const colourAxSi = 'grey';
 
