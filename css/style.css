@@ -133,7 +133,11 @@ svg text {
     font-weight: 700;
 }
 
-@media (max-width: 401px) {
+@media (max-width: 500px) {
+    body {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
     .info{
         display: none !important;
     }
